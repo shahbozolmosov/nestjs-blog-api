@@ -1,6 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
+import helmet from 'helmet';
+import * as compression from 'compression';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -9,6 +11,23 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
 
   // Secure
+  app.use(helmet());
+  
+  // Gzip
+  app.use(
+    compression({
+      threshold: 0,
+      level: 6,
+      filter: (req, res) => {
+        if (req.headers['x-no-compression']) {
+          return false;
+        }
+
+        return compression.filter(req, res);
+      },
+    }),
+  );
+
   // Cors
   // Cookie parser
   // Global prefix
