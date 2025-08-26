@@ -10,6 +10,10 @@ export class BlogService {
     private readonly blogRepo: Repository<Blog>,
   ) {}
 
+  create(){
+    
+  }
+
   findAll() {
     return this.blogRepo.find({
       order: {
