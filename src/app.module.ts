@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppConfig, DatabaseConfig } from './config';
 import Joi from 'joi';
 import { appValidationSchema } from './config/app.config';
 import { databaseValidationSchema } from './config/database.config';
 import { BlogModule } from './modules/blog/blog.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   imports: [
@@ -19,6 +20,13 @@ import { BlogModule } from './modules/blog/blog.module';
       validationOptions: {
         abortEarly: true,
       },
+    }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        ...configService.get('database'),
+      }),
+      inject: [ConfigService],
     }),
     BlogModule,
   ],
