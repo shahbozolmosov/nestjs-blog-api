@@ -4,6 +4,7 @@ import { AppConfig, DatabaseConfig } from './config';
 import Joi from 'joi';
 import { appValidationSchema } from './config/app.config';
 import { databaseValidationSchema } from './config/database.config';
+import { BlogModule } from './modules/blog/blog.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { databaseValidationSchema } from './config/database.config';
         abortEarly: true,
       },
     }),
+    BlogModule,
   ],
   controllers: [],
   providers: [],
