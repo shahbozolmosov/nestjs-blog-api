@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { ClassSerializerInterceptor, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppConfig, DatabaseConfig } from './config';
 import Joi from 'joi';
@@ -6,6 +6,7 @@ import { appValidationSchema } from './config/app.config';
 import { databaseValidationSchema } from './config/database.config';
 import { BlogModule } from './modules/blog/blog.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -31,6 +32,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     BlogModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ClassSerializerInterceptor,
+    },
+  ],
 })
 export class AppModule {}

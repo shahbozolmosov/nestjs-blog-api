@@ -14,8 +14,8 @@ export default class Blog {
   @Column()
   title: string;
 
-  @Column()
-  description: string;
+  @Column({ nullable: true })
+  description?: string;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: string;

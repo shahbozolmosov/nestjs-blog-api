@@ -5,6 +5,8 @@ import helmet from 'helmet';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import { VersioningType } from '@nestjs/common';
+import { ValidationPipe } from '@nestjs/common';
+import { useContainer } from 'class-validator';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -52,6 +54,22 @@ async function bootstrap() {
   });
 
   // Validation
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+      transformOptions: {
+        enableImplicitConversion: true,
+      },
+      disableErrorMessages:
+        configService.get<string>('app.nodenv') === 'production',
+      enableDebugMessages: true,
+    }),
+  );
+
+  useContainer(app.select(AppModule), { fallbackOnErrors: true });
+  
   // Swagger
   // Running
   const port = process.env.PORT ?? 4040;
