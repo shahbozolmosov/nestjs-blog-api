@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import Blog from './entities/blog.entity';
 import { Repository } from 'typeorm';
 import CreateBlogDto from './dto/create-blog.dto';
+import UpdateBlogDto from './dto/update-blog.dto';
 
 @Injectable()
 export class BlogService {
@@ -25,5 +26,17 @@ export class BlogService {
         createdAt: 'DESC',
       },
     });
+  }
+
+  async update(id: string, dto: UpdateBlogDto) {
+    const blogToUpdate = await this.findById(id);
+
+    this.blogRepo.merge(blogToUpdate, dto);
+
+    return await this.blogRepo.save(blogToUpdate);
+  }
+
+  private findById(id: string) {
+    return this.blogRepo.findOneByOrFail({ id });
   }
 }
