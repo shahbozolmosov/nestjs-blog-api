@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import Blog from './entities/blog.entity';
 import { Repository } from 'typeorm';
+import CreateBlogDto from './dto/create-blog.dto';
 
 @Injectable()
 export class BlogService {
@@ -10,8 +11,12 @@ export class BlogService {
     private readonly blogRepo: Repository<Blog>,
   ) {}
 
-  create(){
-    
+  async create(dto: CreateBlogDto) {
+    const newBlog = this.blogRepo.create(dto);
+
+    this.blogRepo.save(newBlog);
+
+    return newBlog;
   }
 
   findAll() {
