@@ -4,6 +4,7 @@ import {
   Get,
   Param,
   ParseUUIDPipe,
+  Patch,
   Post,
 } from '@nestjs/common';
 import { BlogService } from './blog.service';
@@ -26,7 +27,7 @@ export class BlogController {
     return data;
   }
 
-  @Post(':id')
+  @Patch(':id')
   async update(
     @Body() dto: UpdateBlogDto,
     @Param('id', ParseUUIDPipe) id: string,
